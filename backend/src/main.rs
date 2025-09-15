@@ -4,7 +4,8 @@ use axum::{routing::get, Router, Json, serve};
 use serde::Serialize;
 use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
-use axum::http::{HeaderValue, StatusCode}; // <-- ADICIONE StatusCode
+use axum::http::{HeaderValue, StatusCode};
+use std::env;
 
 #[derive(Serialize)]
 struct Message {
@@ -24,19 +25,25 @@ async fn hello_world() -> Json<Message> {
 
 #[tokio::main]
 async fn main() {
-    let frontend_url = "https://hack-meridian-chi.vercel.app/";
 
     let app = Router::new()
-        .route("/", get(root)) // <-- ADICIONE ESTA LINHA PARA A ROTA RAIZ
+        .route("/", get(root))
         .route("/hello", get(hello_world))
         .layer(
             CorsLayer::new()
-                .allow_origin(frontend_url.parse::<HeaderValue>().unwrap())
+                .allow_origin([
+                    "https://hack-meridian-chi.vercel.app/".parse::<HeaderValue>().unwrap(),
+                    "http://localhost:3000".parse::<HeaderValue>().unwrap(), // para desenvolvimento local
+                ])
                 .allow_methods(Any)
                 .allow_headers(Any)
         );
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+    // Pega a porta do ambiente (Render define automaticamente) ou usa 3000 como padrão
+    let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
+    let port: u16 = port.parse().expect("PORT deve ser um número válido");
+    
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!("Servidor rodando em http://{}", addr);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
