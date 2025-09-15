@@ -1,0 +1,11 @@
+/home/lorhan/git/HackMeridian/backend/target/debug/deps/libserde-87e45242b6f83c7a.rmeta: /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/lib.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/integer128.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/mod.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/de.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/ser.rs
+
+/home/lorhan/git/HackMeridian/backend/target/debug/deps/libserde-87e45242b6f83c7a.rlib: /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/lib.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/integer128.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/mod.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/de.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/ser.rs
+
+/home/lorhan/git/HackMeridian/backend/target/debug/deps/serde-87e45242b6f83c7a.d: /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/lib.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/integer128.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/mod.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/de.rs /home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/ser.rs
+
+/home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/lib.rs:
+/home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/integer128.rs:
+/home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/mod.rs:
+/home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/de.rs:
+/home/lorhan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.223/src/private/ser.rs:
