@@ -32,7 +32,7 @@ async fn main() {
         .layer(
             CorsLayer::new()
                 .allow_origin([
-                    "https://hack-meridian-chi.vercel.app/".parse::<HeaderValue>().unwrap(),
+                     "https://hack-meridian-chi.vercel.app".parse::<HeaderValue>().unwrap(),
                     "http://localhost:3000".parse::<HeaderValue>().unwrap(), // para desenvolvimento local
                 ])
                 .allow_methods(Any)
