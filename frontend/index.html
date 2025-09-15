@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Hello Rust Backend</title>
+  <meta charset="UTF-8" />
+  <title>Gestão de Contratos - Stellar</title>
+  <script src="app.js" defer></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { margin: 5px; padding: 10px 20px; }
+    #output { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
-  <h1 id="message">Carregando...</h1>
+  <h1>🚚 Plataforma de Contratos - Stellar</h1>
 
-  <script>
-    async function fetchMessage() {
-      const resp = await fetch("https://hackmeridian.onrender.com/hello"); 
-      const data = await resp.json();
-      document.getElementById("message").textContent = data.message;
-    }
-    fetchMessage().catch(err => {
-      document.getElementById("message").textContent = "Erro: " + err;
-    });
-  </script>
+  <button onclick="createContract()">Criar Contrato</button>
+  <button onclick="manageContract()">Gerir Contrato</button>
+  <button onclick="viewContract()">Ver Situação</button>
+
+  <div id="output">Status aparecerá aqui...</div>
 </body>
 </html>
