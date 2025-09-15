@@ -2,10 +2,20 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Hello World</title>
+  <title>Hello Rust Backend</title>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p>Deploy rodando na Vercel 🚀</p>
+  <h1 id="message">Carregando...</h1>
+
+  <script>
+    async function fetchMessage() {
+      const resp = await fetch("http://127.0.0.1:3000/hello");
+      const data = await resp.json();
+      document.getElementById("message").textContent = data.message;
+    }
+    fetchMessage().catch(err => {
+      document.getElementById("message").textContent = "Erro: " + err;
+    });
+  </script>
 </body>
 </html>
