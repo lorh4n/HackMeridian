@@ -2,6 +2,7 @@ use axum::{routing::get, Router, Json, serve};
 use serde::Serialize;
 use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer}; // <-- ADICIONE ESTAS LINHAS
+use axum::http::HeaderValue;
 
 #[derive(Serialize)]
 struct Message {
@@ -16,12 +17,16 @@ async fn hello_world() -> Json<Message> {
 
 #[tokio::main]
 async fn main() {
-    // cria rota /hello com middleware CORS
+    // Obtenha a URL do seu frontend a partir de uma variável de ambiente ou use um valor fixo
+    let frontend_url = "https://hack-meridian-chi.vercel.app/"; // <-- SUBSTITUA PELO SEU URL
+
     let app = Router::new()
         .route("/hello", get(hello_world))
         .layer(
             CorsLayer::new()
-                .allow_origin(Any)
+                // ANTES: .allow_origin(Any)
+                // DEPOIS:
+                .allow_origin(frontend_url.parse::<HeaderValue>().unwrap())
                 .allow_methods(Any)
                 .allow_headers(Any)
         );
