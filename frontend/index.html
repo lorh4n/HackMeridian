@@ -9,7 +9,7 @@
 
   <script>
     async function fetchMessage() {
-      const resp = await fetch("https://meu-projeto-rust.onrender.com/hello"); 
+      const resp = await fetch("https://hackmeridian.onrender.com/hello"); 
       const data = await resp.json();
       document.getElementById("message").textContent = data.message;
     }
