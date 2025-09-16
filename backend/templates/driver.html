@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold">Driver Panel</h1>
-                        <p class="text-sm text-white/70 mt-1">Gerenciar corridas e entregas</p>
+                        <p class="text-sm text-white/70 mt-1">Manage rides and deliveries</p>
                     </div>
                     <a href="/" class="text-white/70 hover:text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -51,12 +51,12 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 id="driverName" class="font-semibold text-white">Selecionar Motorista</h3>
-                            <p id="driverStatus" class="text-sm text-white/70">Disponível</p>
+                            <h3 id="driverName" class="font-semibold text-white">Select Driver</h3>
+                            <p id="driverStatus" class="text-sm text-white/70">Available</p>
                         </div>
                     </div>
                     <select id="driverSelect" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white">
-                        <option value="">Carregando motoristas...</option>
+                        <option value="">Loading drivers...</option>
                     </select>
                 </div>
             </div>
@@ -64,17 +64,17 @@
             <!-- Notifications -->
             <div class="p-6 border-b border-white/20">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-lg">Notificações</h3>
+                    <h3 class="font-semibold text-lg">Notifications</h3>
                     <span id="notificationBadge" class="bg-red-500 text-white text-xs px-2 py-1 rounded-full notification-badge hidden">0</span>
                 </div>
                 <div id="notificationsList" class="space-y-2 max-h-40 overflow-y-auto">
-                    <p class="text-white/50 text-sm">Nenhuma notificação</p>
+                    <p class="text-white/50 text-sm">No notifications</p>
                 </div>
             </div>
 
             <!-- Quick Actions -->
             <div class="p-6 flex-1">
-                <h3 class="font-semibold text-lg mb-4">Ações Rápidas</h3>
+                <h3 class="font-semibold text-lg mb-4">Quick Actions</h3>
                 <div class="space-y-3">
                     <button id="refreshBtn" class="w-full bg-white/10 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
@@ -82,10 +82,10 @@
                             <polyline points="1 20 1 14 7 14"/>
                             <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                         </svg>
-                        Atualizar
+                        Refresh
                     </button>
                     <button id="markAllReadBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-                        Marcar Todas como Lidas
+                        Mark All as Read
                     </button>
                 </div>
             </div>
@@ -95,8 +95,8 @@
         <main class="flex-1 bg-gray-100 p-8 flex flex-col">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Solicitações de Corrida</h1>
-                <p class="text-gray-500">Gerencie suas corridas e acompanhe o progresso</p>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Ride Requests</h1>
+                <p class="text-gray-500">Manage your rides and track their progress</p>
             </div>
 
             <!-- Status Cards -->
@@ -104,7 +104,7 @@
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Pendentes</p>
+                            <p class="text-sm font-medium text-gray-600">Pending</p>
                             <p id="pendingCount" class="text-2xl font-bold text-yellow-600">0</p>
                         </div>
                         <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -119,7 +119,7 @@
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Aceitas</p>
+                            <p class="text-sm font-medium text-gray-600">Accepted</p>
                             <p id="acceptedCount" class="text-2xl font-bold text-blue-600">0</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -133,7 +133,7 @@
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Em Andamento</p>
+                            <p class="text-sm font-medium text-gray-600">In Progress</p>
                             <p id="activeCount" class="text-2xl font-bold text-emerald-600">0</p>
                         </div>
                         <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -148,7 +148,7 @@
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Finalizadas</p>
+                            <p class="text-sm font-medium text-gray-600">Completed</p>
                             <p id="completedCount" class="text-2xl font-bold text-gray-600">0</p>
                         </div>
                         <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -165,14 +165,14 @@
             <div class="bg-white rounded-xl shadow-sm flex-1">
                 <div class="p-6 border-b border-gray-200">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-semibold text-gray-800">Minhas Corridas</h2>
+                        <h2 class="text-xl font-semibold text-gray-800">My Rides</h2>
                         <div class="flex space-x-2">
                             <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                                <option value="">Todos os Status</option>
-                                <option value="Pendente">Pendentes</option>
-                                <option value="Aceito">Aceitas</option>
-                                <option value="EmAndamento">Em Andamento</option>
-                                <option value="Finalizado">Finalizadas</option>
+                                <option value="">All Statuses</option>
+                                <option value="Pendente">Pending</option>
+                                <option value="Aceito">Accepted</option>
+                                <option value="EmAndamento">In Progress</option>
+                                <option value="Finalizado">Completed</option>
                             </select>
                         </div>
                     </div>
@@ -184,18 +184,18 @@
                             <path d="M10 17h4V5H2v12h8"/>
                             <path d="M22 17h-4V5h4v12Z"/>
                         </svg>
-                        <p class="text-gray-500">Selecione um motorista para ver as corridas</p>
+                        <p class="text-gray-500">Select a driver to see the rides</p>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal de Aceitar/Rejeitar Corrida -->
+    <!-- Accept/Reject Ride Modal -->
     <div id="actionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h3 id="modalTitle" class="text-xl font-semibold text-gray-800">Ação na Corrida</h3>
+                <h3 id="modalTitle" class="text-xl font-semibold text-gray-800">Ride Action</h3>
                 <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -205,28 +205,28 @@
             </div>
             
             <div id="modalContent" class="mb-6">
-                <!-- Conteúdo será inserido via JavaScript -->
+                <!-- Content will be inserted via JavaScript -->
             </div>
             
             <div class="flex justify-end space-x-3">
                 <button id="cancelActionBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
-                    Cancelar
+                    Cancel
                 </button>
                 <button id="confirmActionBtn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
-                    Confirmar
+                    Confirm
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Estado da aplicação
+        // Application state
         let currentDriverId = null;
         let rideRequests = [];
         let notifications = [];
         let currentAction = null;
 
-        // Elementos DOM
+        // DOM Elements
         const elements = {
             driverSelect: document.getElementById('driverSelect'),
             driverName: document.getElementById('driverName'),
@@ -250,14 +250,14 @@
             completedCount: document.getElementById('completedCount')
         };
 
-        // Inicialização
+        // Initialization
         document.addEventListener('DOMContentLoaded', async function() {
             await loadDrivers();
             setupEventListeners();
             startPolling();
         });
 
-        // Carregar lista de motoristas
+        // Load driver list
         async function loadDrivers() {
             try {
                 const response = await fetch('/api/users?role=driver');
@@ -265,7 +265,7 @@
                 
                 if (result.success) {
                     const drivers = result.data.users;
-                    elements.driverSelect.innerHTML = '<option value="">Selecione um motorista</option>';
+                    elements.driverSelect.innerHTML = '<option value="">Select a driver</option>';
                     
                     drivers.forEach(driver => {
                         const option = document.createElement('option');
@@ -275,12 +275,12 @@
                     });
                 }
             } catch (error) {
-                console.error('Erro ao carregar motoristas:', error);
-                elements.driverSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+                console.error('Error loading drivers:', error);
+                elements.driverSelect.innerHTML = '<option value="">Error loading</option>';
             }
         }
 
-        // Configurar event listeners
+        // Setup event listeners
         function setupEventListeners() {
             elements.driverSelect.addEventListener('change', function() {
                 currentDriverId = this.value;
@@ -288,13 +288,13 @@
                     const selectedOption = this.options[this.selectedIndex];
                     const driverName = selectedOption.textContent.split(' (')[0];
                     elements.driverName.textContent = driverName;
-                    elements.driverStatus.textContent = 'Selecionado';
+                    elements.driverStatus.textContent = 'Selected';
                     loadRideRequests();
                     loadNotifications();
                 } else {
-                    elements.driverName.textContent = 'Selecionar Motorista';
-                    elements.driverStatus.textContent = 'Disponível';
-                    elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">Selecione um motorista para ver as corridas</p></div>';
+                    elements.driverName.textContent = 'Select Driver';
+                    elements.driverStatus.textContent = 'Available';
+                    elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">Select a driver to see the rides</p></div>';
                 }
             });
 
@@ -308,9 +308,9 @@
             elements.confirmActionBtn.addEventListener('click', confirmAction);
         }
 
-        // Carregar solicitações de corrida
+        // Load ride requests
         async function loadRideRequests() {
-            if (!currentDriverId) return;
+            if (!currentDriverId) return; 
             
             try {
                 const response = await fetch(`/api/ride-requests?user_id=${currentDriverId}`);
@@ -322,13 +322,13 @@
                     updateStatusCounts();
                 }
             } catch (error) {
-                console.error('Erro ao carregar corridas:', error);
+                console.error('Error loading rides:', error);
             }
         }
 
-        // Carregar notificações
+        // Load notifications
         async function loadNotifications() {
-            if (!currentDriverId) return;
+            if (!currentDriverId) return; 
             
             try {
                 const response = await fetch(`/api/notifications/${currentDriverId}`);
@@ -339,11 +339,11 @@
                     renderNotifications();
                 }
             } catch (error) {
-                console.error('Erro ao carregar notificações:', error);
+                console.error('Error loading notifications:', error);
             }
         }
 
-        // Renderizar corridas
+        // Render rides
         function renderRideRequests() {
             const filterStatus = elements.statusFilter.value;
             const filteredRides = filterStatus ? 
@@ -351,14 +351,14 @@
                 rideRequests;
 
             if (filteredRides.length === 0) {
-                elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">Nenhuma corrida encontrada</p></div>';
+                elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">No rides found</p></div>';
                 return;
             }
 
             elements.ridesList.innerHTML = filteredRides.map(ride => createRideCard(ride)).join('');
         }
 
-        // Criar card de corrida
+        // Create ride card
         function createRideCard(ride) {
             const statusColors = {
                 'Pendente': 'bg-yellow-100 text-yellow-800',
@@ -376,26 +376,26 @@
                     <div class="flex items-start justify-between mb-3">
                         <div>
                             <h3 class="font-semibold text-gray-800">${ride.trip_data.trip_id}</h3>
-                            <p class="text-sm text-gray-600">${ride.trip_data.origin_address || 'Origem'} → ${ride.trip_data.destination_address || 'Destino'}</p>
+                            <p class="text-sm text-gray-600">${ride.trip_data.origin_address || 'Origin'} → ${ride.trip_data.destination_address || 'Destination'}</p>
                         </div>
                         <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColors[ride.status]}">${ride.status}</span>
                     </div>
                     
                     <div class="text-sm text-gray-600 mb-3">
-                        <p>Criado em: ${new Date(ride.created_at).toLocaleString('pt-BR')}</p>
-                        ${ride.accepted_at ? `<p>Aceito em: ${new Date(ride.accepted_at).toLocaleString('pt-BR')}</p>` : ''}
+                        <p>Created at: ${new Date(ride.created_at).toLocaleString('en-US')}</p>
+                        ${ride.accepted_at ? `<p>Accepted at: ${new Date(ride.accepted_at).toLocaleString('en-US')}</p>` : ''}
                     </div>
 
                     <div class="flex space-x-2">
-                        ${canAccept ? `<button onclick="openActionModal('accept', '${ride.id}')" class="bg-emerald-600 text-white px-3 py-2 rounded text-sm hover:bg-emerald-700">Aceitar</button>` : ''}
-                        ${canReject ? `<button onclick="openActionModal('reject', '${ride.id}')" class="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700">Rejeitar</button>` : ''}
-                        <button onclick="viewRideDetails('${ride.id}')" class="bg-gray-600 text-white px-3 py-2 rounded text-sm hover:bg-gray-700">Detalhes</button>
+                        ${canAccept ? `<button onclick="openActionModal('accept', '${ride.id}')" class="bg-emerald-600 text-white px-3 py-2 rounded text-sm hover:bg-emerald-700">Accept</button>` : ''}
+                        ${canReject ? `<button onclick="openActionModal('reject', '${ride.id}')" class="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700">Reject</button>` : ''}
+                        <button onclick="viewRideDetails('${ride.id}')" class="bg-gray-600 text-white px-3 py-2 rounded text-sm hover:bg-gray-700">Details</button>
                     </div>
                 </div>
             `;
         }
 
-        // Renderizar notificações
+        // Render notifications
         function renderNotifications() {
             const unreadCount = notifications.filter(n => !n.read).length;
             
@@ -407,22 +407,22 @@
             }
 
             if (notifications.length === 0) {
-                elements.notificationsList.innerHTML = '<p class="text-white/50 text-sm">Nenhuma notificação</p>';
+                elements.notificationsList.innerHTML = '<p class="text-white/50 text-sm">No notifications</p>';
                 return;
             }
 
             elements.notificationsList.innerHTML = notifications
-                .slice(0, 5) // Mostrar apenas as 5 mais recentes
+                .slice(0, 5) // Show only the 5 most recent
                 .map(notification => `
                     <div class="bg-white/5 rounded-lg p-3 ${notification.read ? 'opacity-60' : ''}">
                         <p class="text-sm font-medium text-white">${notification.title}</p>
                         <p class="text-xs text-white/70">${notification.message}</p>
-                        <p class="text-xs text-white/50 mt-1">${new Date(notification.created_at).toLocaleString('pt-BR')}</p>
+                        <p class="text-xs text-white/50 mt-1">${new Date(notification.created_at).toLocaleString('en-US')}</p>
                     </div>
                 `).join('');
         }
 
-        // Atualizar contadores de status
+        // Update status counters
         function updateStatusCounts() {
             const counts = rideRequests.reduce((acc, ride) => {
                 acc[ride.status] = (acc[ride.status] || 0) + 1;
@@ -435,38 +435,38 @@
             elements.completedCount.textContent = counts['Finalizado'] || 0;
         }
 
-        // Abrir modal de ação
+        // Open action modal
         function openActionModal(action, rideId) {
             currentAction = { action, rideId };
             const ride = rideRequests.find(r => r.id === rideId);
             
             if (action === 'accept') {
-                elements.modalTitle.textContent = 'Aceitar Corrida';
+                elements.modalTitle.textContent = 'Accept Ride';
                 elements.modalContent.innerHTML = `
-                    <p class="text-gray-700 mb-4">Deseja aceitar a corrida <strong>${ride.trip_data.trip_id}</strong>?</p>
+                    <p class="text-gray-700 mb-4">Do you want to accept the ride <strong>${ride.trip_data.trip_id}</strong>?</p>
                     <div class="bg-gray-50 p-3 rounded">
-                        <p class="text-sm"><strong>Origem:</strong> ${ride.trip_data.origin_address || 'N/A'}</p>
-                        <p class="text-sm"><strong>Destino:</strong> ${ride.trip_data.destination_address || 'N/A'}</p>
+                        <p class="text-sm"><strong>Origin:</strong> ${ride.trip_data.origin_address || 'N/A'}</p>
+                        <p class="text-sm"><strong>Destination:</strong> ${ride.trip_data.destination_address || 'N/A'}</p>
                     </div>
                 `;
-                elements.confirmActionBtn.textContent = 'Aceitar Corrida';
+                elements.confirmActionBtn.textContent = 'Accept Ride';
                 elements.confirmActionBtn.className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700';
             } else if (action === 'reject') {
-                elements.modalTitle.textContent = 'Rejeitar Corrida';
+                elements.modalTitle.textContent = 'Reject Ride';
                 elements.modalContent.innerHTML = `
-                    <p class="text-gray-700 mb-4">Deseja rejeitar a corrida <strong>${ride.trip_data.trip_id}</strong>?</p>
-                    <textarea id="rejectionReason" placeholder="Motivo da rejeição (opcional)" class="w-full border border-gray-300 rounded-lg p-3 text-sm"></textarea>
+                    <p class="text-gray-700 mb-4">Do you want to reject the ride <strong>${ride.trip_data.trip_id}</strong>?</p>
+                    <textarea id="rejectionReason" placeholder="Reason for rejection (optional)" class="w-full border border-gray-300 rounded-lg p-3 text-sm"></textarea>
                 `;
-                elements.confirmActionBtn.textContent = 'Rejeitar Corrida';
+                elements.confirmActionBtn.textContent = 'Reject Ride';
                 elements.confirmActionBtn.className = 'bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700';
             }
             
             elements.actionModal.classList.remove('hidden');
         }
 
-        // Confirmar ação
+        // Confirm action
         async function confirmAction() {
-            if (!currentAction) return;
+            if (!currentAction) return; 
             
             try {
                 let endpoint, data;
@@ -492,27 +492,27 @@
                     closeModal();
                     await refreshData();
                 } else {
-                    alert('Erro: ' + result.error);
+                    alert('Error: ' + result.error);
                 }
             } catch (error) {
-                console.error('Erro na ação:', error);
-                alert('Erro ao processar ação');
+                console.error('Error in action:', error);
+                alert('Error processing action');
             }
         }
 
-        // Fechar modal
+        // Close modal
         function closeModal() {
             elements.actionModal.classList.add('hidden');
             currentAction = null;
         }
 
-        // Ver detalhes da corrida
+        // View ride details
         function viewRideDetails(rideId) {
             const ride = rideRequests.find(r => r.id === rideId);
-            alert(`Detalhes da corrida:\n\nID: ${ride.trip_data.trip_id}\nStatus: ${ride.status}\nCriado: ${new Date(ride.created_at).toLocaleString('pt-BR')}`);
+            alert(`Ride details:\n\nID: ${ride.trip_data.trip_id}\nStatus: ${ride.status}\nCreated: ${new Date(ride.created_at).toLocaleString('en-US')}`);
         }
 
-        // Atualizar dados
+        // Refresh data
         async function refreshData() {
             if (currentDriverId) {
                 await Promise.all([
@@ -522,9 +522,9 @@
             }
         }
 
-        // Marcar todas as notificações como lidas
+        // Mark all notifications as read
         async function markAllNotificationsRead() {
-            if (!currentDriverId || notifications.length === 0) return;
+            if (!currentDriverId || notifications.length === 0) return; 
             
             try {
                 const unreadNotifications = notifications.filter(n => !n.read);
@@ -533,27 +533,27 @@
                 }
                 await loadNotifications();
             } catch (error) {
-                console.error('Erro ao marcar notificações:', error);
+                console.error('Error marking notifications:', error);
             }
         }
 
-        // Polling para atualizações automáticas
+        // Polling for automatic updates
         function startPolling() {
             setInterval(async () => {
                 if (currentDriverId) {
                     await loadNotifications();
-                    // Verificar por novas corridas sem recarregar tudo
+                    // Check for new rides without reloading everything
                     const currentCount = rideRequests.length;
                     await loadRideRequests();
                     if (rideRequests.length > currentCount) {
-                        // Nova corrida chegou - mostrar algum feedback
-                        console.log('Nova corrida disponível');
+                        // New ride has arrived - show some feedback
+                        console.log('New ride available');
                     }
                 }
-            }, 10000); // Atualizar a cada 10 segundos
+            }, 10000); // Update every 10 seconds
         }
 
-        // Tornar funções globais
+        // Make functions global
         window.openActionModal = openActionModal;
         window.viewRideDetails = viewRideDetails;
     </script>
