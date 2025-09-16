@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTRA | Driver Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-sentra-navy { background-color: #05070f; }
+        .text-sentra-orange { color: #FF7F32; }
+        .bg-sentra-orange { background-color: #FF7F32; }
+        .border-sentra-orange { border-color: #FF7F32; }
+        .notification-badge {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen w-screen text-gray-800">
+        <!-- SIDEBAR -->
+        <aside class="w-96 min-w-[384px] bg-sentra-navy text-white flex flex-col shadow-2xl z-20">
+            <!-- Header -->
+            <header class="p-6 border-b border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold">Driver Panel</h1>
+                        <p class="text-sm text-white/70 mt-1">Gerenciar corridas e entregas</p>
+                    </div>
+                    <a href="/" class="text-white/70 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Driver Info -->
+            <div class="p-6 border-b border-white/20">
+                <div class="bg-white/10 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 id="driverName" class="font-semibold text-white">Selecionar Motorista</h3>
+                            <p id="driverStatus" class="text-sm text-white/70">Disponível</p>
+                        </div>
+                    </div>
+                    <select id="driverSelect" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white">
+                        <option value="">Carregando motoristas...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="p-6 border-b border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-lg">Notificações</h3>
+                    <span id="notificationBadge" class="bg-red-500 text-white text-xs px-2 py-1 rounded-full notification-badge hidden">0</span>
+                </div>
+                <div id="notificationsList" class="space-y-2 max-h-40 overflow-y-auto">
+                    <p class="text-white/50 text-sm">Nenhuma notificação</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="p-6 flex-1">
+                <h3 class="font-semibold text-lg mb-4">Ações Rápidas</h3>
+                <div class="space-y-3">
+                    <button id="refreshBtn" class="w-full bg-white/10 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <polyline points="1 20 1 14 7 14"/>
+                            <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                        Atualizar
+                    </button>
+                    <button id="markAllReadBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        Marcar Todas como Lidas
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 bg-gray-100 p-8 flex flex-col">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Solicitações de Corrida</h1>
+                <p class="text-gray-500">Gerencie suas corridas e acompanhe o progresso</p>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Pendentes</p>
+                            <p id="pendingCount" class="text-2xl font-bold text-yellow-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-600">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Aceitas</p>
+                            <p id="acceptedCount" class="text-2xl font-bold text-blue-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Em Andamento</p>
+                            <p id="activeCount" class="text-2xl font-bold text-emerald-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Finalizadas</p>
+                            <p id="completedCount" class="text-2xl font-bold text-gray-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22,4 12,14.01 9,11.01"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rides List -->
+            <div class="bg-white rounded-xl shadow-sm flex-1">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-800">Minhas Corridas</h2>
+                        <div class="flex space-x-2">
+                            <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                <option value="">Todos os Status</option>
+                                <option value="Pendente">Pendentes</option>
+                                <option value="Aceito">Aceitas</option>
+                                <option value="EmAndamento">Em Andamento</option>
+                                <option value="Finalizado">Finalizadas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="ridesList" class="p-6">
+                    <div class="text-center py-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-gray-300 mb-4">
+                            <path d="M10 17h4V5H2v12h8"/>
+                            <path d="M22 17h-4V5h4v12Z"/>
+                        </svg>
+                        <p class="text-gray-500">Selecione um motorista para ver as corridas</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Aceitar/Rejeitar Corrida -->
+    <div id="actionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 id="modalTitle" class="text-xl font-semibold text-gray-800">Ação na Corrida</h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="modalContent" class="mb-6">
+                <!-- Conteúdo será inserido via JavaScript -->
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancelActionBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                    Cancelar
+                </button>
+                <button id="confirmActionBtn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        let currentDriverId = null;
+        let rideRequests = [];
+        let notifications = [];
+        let currentAction = null;
+
+        // Elementos DOM
+        const elements = {
+            driverSelect: document.getElementById('driverSelect'),
+            driverName: document.getElementById('driverName'),
+            driverStatus: document.getElementById('driverStatus'),
+            notificationBadge: document.getElementById('notificationBadge'),
+            notificationsList: document.getElementById('notificationsList'),
+            ridesList: document.getElementById('ridesList'),
+            statusFilter: document.getElementById('statusFilter'),
+            refreshBtn: document.getElementById('refreshBtn'),
+            markAllReadBtn: document.getElementById('markAllReadBtn'),
+            actionModal: document.getElementById('actionModal'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalContent: document.getElementById('modalContent'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            cancelActionBtn: document.getElementById('cancelActionBtn'),
+            confirmActionBtn: document.getElementById('confirmActionBtn'),
+            // Status counts
+            pendingCount: document.getElementById('pendingCount'),
+            acceptedCount: document.getElementById('acceptedCount'),
+            activeCount: document.getElementById('activeCount'),
+            completedCount: document.getElementById('completedCount')
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadDrivers();
+            setupEventListeners();
+            startPolling();
+        });
+
+        // Carregar lista de motoristas
+        async function loadDrivers() {
+            try {
+                const response = await fetch('/api/users?role=driver');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const drivers = result.data.users;
+                    elements.driverSelect.innerHTML = '<option value="">Selecione um motorista</option>';
+                    
+                    drivers.forEach(driver => {
+                        const option = document.createElement('option');
+                        option.value = driver.id;
+                        option.textContent = `${driver.name} (${driver.id})`;
+                        elements.driverSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar motoristas:', error);
+                elements.driverSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+            }
+        }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            elements.driverSelect.addEventListener('change', function() {
+                currentDriverId = this.value;
+                if (currentDriverId) {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const driverName = selectedOption.textContent.split(' (')[0];
+                    elements.driverName.textContent = driverName;
+                    elements.driverStatus.textContent = 'Selecionado';
+                    loadRideRequests();
+                    loadNotifications();
+                } else {
+                    elements.driverName.textContent = 'Selecionar Motorista';
+                    elements.driverStatus.textContent = 'Disponível';
+                    elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">Selecione um motorista para ver as corridas</p></div>';
+                }
+            });
+
+            elements.statusFilter.addEventListener('change', renderRideRequests);
+            elements.refreshBtn.addEventListener('click', refreshData);
+            elements.markAllReadBtn.addEventListener('click', markAllNotificationsRead);
+            
+            // Modal events
+            elements.closeModalBtn.addEventListener('click', closeModal);
+            elements.cancelActionBtn.addEventListener('click', closeModal);
+            elements.confirmActionBtn.addEventListener('click', confirmAction);
+        }
+
+        // Carregar solicitações de corrida
+        async function loadRideRequests() {
+            if (!currentDriverId) return;
+            
+            try {
+                const response = await fetch(`/api/ride-requests?user_id=${currentDriverId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    rideRequests = result.data.ride_requests;
+                    renderRideRequests();
+                    updateStatusCounts();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar corridas:', error);
+            }
+        }
+
+        // Carregar notificações
+        async function loadNotifications() {
+            if (!currentDriverId) return;
+            
+            try {
+                const response = await fetch(`/api/notifications/${currentDriverId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    notifications = result.data.notifications;
+                    renderNotifications();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar notificações:', error);
+            }
+        }
+
+        // Renderizar corridas
+        function renderRideRequests() {
+            const filterStatus = elements.statusFilter.value;
+            const filteredRides = filterStatus ? 
+                rideRequests.filter(ride => ride.status === filterStatus) : 
+                rideRequests;
+
+            if (filteredRides.length === 0) {
+                elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">Nenhuma corrida encontrada</p></div>';
+                return;
+            }
+
+            elements.ridesList.innerHTML = filteredRides.map(ride => createRideCard(ride)).join('');
+        }
+
+        // Criar card de corrida
+        function createRideCard(ride) {
+            const statusColors = {
+                'Pendente': 'bg-yellow-100 text-yellow-800',
+                'Aceito': 'bg-blue-100 text-blue-800',
+                'EmAndamento': 'bg-emerald-100 text-emerald-800',
+                'Finalizado': 'bg-gray-100 text-gray-800',
+                'Recusado': 'bg-red-100 text-red-800'
+            };
+
+            const canAccept = ride.status === 'Pendente';
+            const canReject = ride.status === 'Pendente';
+
+            return `
+                <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">${ride.trip_data.trip_id}</h3>
+                            <p class="text-sm text-gray-600">${ride.trip_data.origin_address || 'Origem'} → ${ride.trip_data.destination_address || 'Destino'}</p>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColors[ride.status]}">${ride.status}</span>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 mb-3">
+                        <p>Criado em: ${new Date(ride.created_at).toLocaleString('pt-BR')}</p>
+                        ${ride.accepted_at ? `<p>Aceito em: ${new Date(ride.accepted_at).toLocaleString('pt-BR')}</p>` : ''}
+                    </div>
+
+                    <div class="flex space-x-2">
+                        ${canAccept ? `<button onclick="openActionModal('accept', '${ride.id}')" class="bg-emerald-600 text-white px-3 py-2 rounded text-sm hover:bg-emerald-700">Aceitar</button>` : ''}
+                        ${canReject ? `<button onclick="openActionModal('reject', '${ride.id}')" class="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700">Rejeitar</button>` : ''}
+                        <button onclick="viewRideDetails('${ride.id}')" class="bg-gray-600 text-white px-3 py-2 rounded text-sm hover:bg-gray-700">Detalhes</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renderizar notificações
+        function renderNotifications() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            if (unreadCount > 0) {
+                elements.notificationBadge.textContent = unreadCount;
+                elements.notificationBadge.classList.remove('hidden');
+            } else {
+                elements.notificationBadge.classList.add('hidden');
+            }
+
+            if (notifications.length === 0) {
+                elements.notificationsList.innerHTML = '<p class="text-white/50 text-sm">Nenhuma notificação</p>';
+                return;
+            }
+
+            elements.notificationsList.innerHTML = notifications
+                .slice(0, 5) // Mostrar apenas as 5 mais recentes
+                .map(notification => `
+                    <div class="bg-white/5 rounded-lg p-3 ${notification.read ? 'opacity-60' : ''}">
+                        <p class="text-sm font-medium text-white">${notification.title}</p>
+                        <p class="text-xs text-white/70">${notification.message}</p>
+                        <p class="text-xs text-white/50 mt-1">${new Date(notification.created_at).toLocaleString('pt-BR')}</p>
+                    </div>
+                `).join('');
+        }
+
+        // Atualizar contadores de status
+        function updateStatusCounts() {
+            const counts = rideRequests.reduce((acc, ride) => {
+                acc[ride.status] = (acc[ride.status] || 0) + 1;
+                return acc;
+            }, {});
+
+            elements.pendingCount.textContent = counts['Pendente'] || 0;
+            elements.acceptedCount.textContent = counts['Aceito'] || 0;
+            elements.activeCount.textContent = counts['EmAndamento'] || 0;
+            elements.completedCount.textContent = counts['Finalizado'] || 0;
+        }
+
+        // Abrir modal de ação
+        function openActionModal(action, rideId) {
+            currentAction = { action, rideId };
+            const ride = rideRequests.find(r => r.id === rideId);
+            
+            if (action === 'accept') {
+                elements.modalTitle.textContent = 'Aceitar Corrida';
+                elements.modalContent.innerHTML = `
+                    <p class="text-gray-700 mb-4">Deseja aceitar a corrida <strong>${ride.trip_data.trip_id}</strong>?</p>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p class="text-sm"><strong>Origem:</strong> ${ride.trip_data.origin_address || 'N/A'}</p>
+                        <p class="text-sm"><strong>Destino:</strong> ${ride.trip_data.destination_address || 'N/A'}</p>
+                    </div>
+                `;
+                elements.confirmActionBtn.textContent = 'Aceitar Corrida';
+                elements.confirmActionBtn.className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700';
+            } else if (action === 'reject') {
+                elements.modalTitle.textContent = 'Rejeitar Corrida';
+                elements.modalContent.innerHTML = `
+                    <p class="text-gray-700 mb-4">Deseja rejeitar a corrida <strong>${ride.trip_data.trip_id}</strong>?</p>
+                    <textarea id="rejectionReason" placeholder="Motivo da rejeição (opcional)" class="w-full border border-gray-300 rounded-lg p-3 text-sm"></textarea>
+                `;
+                elements.confirmActionBtn.textContent = 'Rejeitar Corrida';
+                elements.confirmActionBtn.className = 'bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700';
+            }
+            
+            elements.actionModal.classList.remove('hidden');
+        }
+
+        // Confirmar ação
+        async function confirmAction() {
+            if (!currentAction) return;
+            
+            try {
+                let endpoint, data;
+                
+                if (currentAction.action === 'accept') {
+                    endpoint = `/api/ride-requests/${currentAction.rideId}/accept`;
+                    data = { driver_id: currentDriverId };
+                } else if (currentAction.action === 'reject') {
+                    endpoint = `/api/ride-requests/${currentAction.rideId}/reject`;
+                    const reason = document.getElementById('rejectionReason')?.value || '';
+                    data = { driver_id: currentDriverId, reason };
+                }
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    closeModal();
+                    await refreshData();
+                } else {
+                    alert('Erro: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Erro na ação:', error);
+                alert('Erro ao processar ação');
+            }
+        }
+
+        // Fechar modal
+        function closeModal() {
+            elements.actionModal.classList.add('hidden');
+            currentAction = null;
+        }
+
+        // Ver detalhes da corrida
+        function viewRideDetails(rideId) {
+            const ride = rideRequests.find(r => r.id === rideId);
+            alert(`Detalhes da corrida:\n\nID: ${ride.trip_data.trip_id}\nStatus: ${ride.status}\nCriado: ${new Date(ride.created_at).toLocaleString('pt-BR')}`);
+        }
+
+        // Atualizar dados
+        async function refreshData() {
+            if (currentDriverId) {
+                await Promise.all([
+                    loadRideRequests(),
+                    loadNotifications()
+                ]);
+            }
+        }
+
+        // Marcar todas as notificações como lidas
+        async function markAllNotificationsRead() {
+            if (!currentDriverId || notifications.length === 0) return;
+            
+            try {
+                const unreadNotifications = notifications.filter(n => !n.read);
+                for (const notification of unreadNotifications) {
+                    await fetch(`/api/notifications/${currentDriverId}/${notification.id}/read`, { method: 'POST' });
+                }
+                await loadNotifications();
+            } catch (error) {
+                console.error('Erro ao marcar notificações:', error);
+            }
+        }
+
+        // Polling para atualizações automáticas
+        function startPolling() {
+            setInterval(async () => {
+                if (currentDriverId) {
+                    await loadNotifications();
+                    // Verificar por novas corridas sem recarregar tudo
+                    const currentCount = rideRequests.length;
+                    await loadRideRequests();
+                    if (rideRequests.length > currentCount) {
+                        // Nova corrida chegou - mostrar algum feedback
+                        console.log('Nova corrida disponível');
+                    }
+                }
+            }, 10000); // Atualizar a cada 10 segundos
+        }
+
+        // Tornar funções globais
+        window.openActionModal = openActionModal;
+        window.viewRideDetails = viewRideDetails;
+    </script>
+</body>
+</html>

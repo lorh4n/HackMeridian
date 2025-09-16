@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTRA | Enterprise Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-sentra-navy { background-color: #05070f; }
+        .text-sentra-orange { color: #FF7F32; }
+        .bg-sentra-orange { background-color: #FF7F32; }
+        .border-sentra-orange { border-color: #FF7F32; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen w-screen text-gray-800">
+        <!-- SIDEBAR -->
+        <aside class="w-96 min-w-[384px] bg-sentra-navy text-white flex flex-col shadow-2xl z-20">
+            <!-- Header -->
+            <header class="p-6 border-b border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold">Enterprise Panel</h1>
+                        <p class="text-sm text-white/70 mt-1">Gerenciar frota e operações</p>
+                    </div>
+                    <a href="/" class="text-white/70 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Enterprise Info -->
+            <div class="p-6 border-b border-white/20">
+                <div class="bg-white/10 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 id="enterpriseName" class="font-semibold text-white">Selecionar Empresa</h3>
+                            <p id="enterpriseStatus" class="text-sm text-white/70">Ativa</p>
+                        </div>
+                    </div>
+                    <select id="enterpriseSelect" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white">
+                        <option value="">Carregando empresas...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="p-6 border-b border-white/20">
+                <h3 class="font-semibold text-lg mb-4">Ações Rápidas</h3>
+                <div class="space-y-3">
+                    <button id="createRideBtn" class="w-full bg-sentra-orange text-white py-3 px-4 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center font-medium disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                        </svg>
+                        Nova Corrida
+                    </button>
+                    <button id="refreshBtn" class="w-full bg-white/10 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-colors">
+                        Atualizar Dados
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-lg">Notificações</h3>
+                    <span id="notificationBadge" class="bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
+                </div>
+                <div id="notificationsList" class="space-y-2">
+                    <p class="text-white/50 text-sm">Nenhuma notificação</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 bg-gray-100 p-8 flex flex-col">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Gestão de Corridas</h1>
+                <p class="text-gray-500">Controle sua frota e acompanhe as operações</p>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Pendentes</p>
+                            <p id="pendingCount" class="text-2xl font-bold text-yellow-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-600">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Aceitas</p>
+                            <p id="acceptedCount" class="text-2xl font-bold text-blue-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Em Andamento</p>
+                            <p id="activeCount" class="text-2xl font-bold text-emerald-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600">
+                                <circle cx="12" cy="12" r="8"/>
+                                <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Finalizadas</p>
+                            <p id="completedCount" class="text-2xl font-bold text-gray-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22,4 12,14.01 9,11.01"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Rejeitadas</p>
+                            <p id="rejectedCount" class="text-2xl font-bold text-red-600">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="15" y1="9" x2="9" y2="15"/>
+                                <line x1="9" y1="9" x2="15" y2="15"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rides List -->
+            <div class="bg-white rounded-xl shadow-sm flex-1">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-800">Corridas da Empresa</h2>
+                        <div class="flex space-x-2">
+                            <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                <option value="">Todos os Status</option>
+                                <option value="Pendente">Pendentes</option>
+                                <option value="Aceito">Aceitas</option>
+                                <option value="EmAndamento">Em Andamento</option>
+                                <option value="Finalizado">Finalizadas</option>
+                                <option value="Recusado">Rejeitadas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="ridesList" class="p-6">
+                    <div class="text-center py-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-gray-300 mb-4">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                        <p class="text-gray-500">Selecione uma empresa para ver as corridas</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Nova Corrida -->
+    <div id="createRideModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3 mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Nova Corrida</h3>
+                <button id="closeCreateModalBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="createRideForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="tripId" class="block text-sm font-medium text-gray-700 mb-1">ID da Viagem</label>
+                        <input type="text" id="tripId" name="tripId" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="driverId" class="block text-sm font-medium text-gray-700 mb-1">Motorista</label>
+                        <select id="driverId" name="driverId" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Selecione um motorista</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="originAddress" class="block text-sm font-medium text-gray-700 mb-1">Endereço de Origem</label>
+                        <input type="text" id="originAddress" name="originAddress" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="destinationAddress" class="block text-sm font-medium text-gray-700 mb-1">Endereço de Destino</label>
+                        <input type="text" id="destinationAddress" name="destinationAddress" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="estimatedDuration" class="block text-sm font-medium text-gray-700 mb-1">Duração Estimada (minutos)</label>
+                    <input type="number" id="estimatedDuration" name="estimatedDuration" min="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div class="border-t pt-4">
+                    <h4 class="font-medium text-gray-700 mb-2">Coordenadas da Rota (opcional)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="routeOrigin" class="block text-sm text-gray-600 mb-1">Origem (lat,lng)</label>
+                            <input type="text" id="routeOrigin" name="routeOrigin" placeholder="-23.550,-46.633" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label for="routeWaypoint" class="block text-sm text-gray-600 mb-1">Ponto Intermediário</label>
+                            <input type="text" id="routeWaypoint" name="routeWaypoint" placeholder="-23.555,-46.640" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label for="routeDestination" class="block text-sm text-gray-600 mb-1">Destino (lat,lng)</label>
+                            <input type="text" id="routeDestination" name="routeDestination" placeholder="-23.560,-46.650" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="flex justify-end space-x-3 mt-6 pt-4 border-t">
+                <button id="cancelCreateBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                    Cancelar
+                </button>
+                <button id="confirmCreateBtn" class="bg-sentra-orange text-white px-4 py-2 rounded-lg hover:opacity-90">
+                    Criar Corrida
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ação na Corrida -->
+    <div id="actionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 id="actionModalTitle" class="text-xl font-semibold text-gray-800">Ação na Corrida</h3>
+                <button id="closeActionModalBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="actionModalContent" class="mb-6">
+                <!-- Conteúdo será inserido via JavaScript -->
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancelActionBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                    Cancelar
+                </button>
+                <button id="confirmActionBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        let currentEnterpriseId = null;
+        let rideRequests = [];
+        let notifications = [];
+        let drivers = [];
+        let currentAction = null;
+
+        // Elementos DOM
+        const elements = {
+            enterpriseSelect: document.getElementById('enterpriseSelect'),
+            enterpriseName: document.getElementById('enterpriseName'),
+            enterpriseStatus: document.getElementById('enterpriseStatus'),
+            createRideBtn: document.getElementById('createRideBtn'),
+            refreshBtn: document.getElementById('refreshBtn'),
+            notificationBadge: document.getElementById('notificationBadge'),
+            notificationsList: document.getElementById('notificationsList'),
+            ridesList: document.getElementById('ridesList'),
+            statusFilter: document.getElementById('statusFilter'),
+            
+            // Modais
+            createRideModal: document.getElementById('createRideModal'),
+            createRideForm: document.getElementById('createRideForm'),
+            closeCreateModalBtn: document.getElementById('closeCreateModalBtn'),
+            cancelCreateBtn: document.getElementById('cancelCreateBtn'),
+            confirmCreateBtn: document.getElementById('confirmCreateBtn'),
+            
+            actionModal: document.getElementById('actionModal'),
+            actionModalTitle: document.getElementById('actionModalTitle'),
+            actionModalContent: document.getElementById('actionModalContent'),
+            closeActionModalBtn: document.getElementById('closeActionModalBtn'),
+            cancelActionBtn: document.getElementById('cancelActionBtn'),
+            confirmActionBtn: document.getElementById('confirmActionBtn'),
+            
+            // Form fields
+            tripId: document.getElementById('tripId'),
+            driverId: document.getElementById('driverId'),
+            
+            // Status counts
+            pendingCount: document.getElementById('pendingCount'),
+            acceptedCount: document.getElementById('acceptedCount'),
+            activeCount: document.getElementById('activeCount'),
+            completedCount: document.getElementById('completedCount'),
+            rejectedCount: document.getElementById('rejectedCount')
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Inicializando Enterprise Dashboard...');
+            await loadEnterprises();
+            await loadDrivers();
+            setupEventListeners();
+            generateTripId(); // Gerar ID inicial
+            startPolling();
+        });
+
+        // Carregar empresas
+        async function loadEnterprises() {
+            try {
+                console.log('Carregando empresas...');
+                const response = await fetch('/api/users?role=enterprise');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const enterprises = result.data.users;
+                    elements.enterpriseSelect.innerHTML = '<option value="">Selecione uma empresa</option>';
+                    
+                    enterprises.forEach(enterprise => {
+                        const option = document.createElement('option');
+                        option.value = enterprise.id;
+                        option.textContent = `${enterprise.name} (${enterprise.id})`;
+                        elements.enterpriseSelect.appendChild(option);
+                    });
+                    
+                    console.log(`${enterprises.length} empresas carregadas`);
+                } else {
+                    console.error('Erro ao carregar empresas:', result);
+                    showError('Erro ao carregar empresas');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar empresas:', error);
+                showError('Erro de conexão ao carregar empresas');
+            }
+        }
+
+        // Carregar motoristas
+        async function loadDrivers() {
+            try {
+                console.log('Carregando motoristas...');
+                const response = await fetch('/api/users?role=driver');
+                const result = await response.json();
+                
+                if (result.success) {
+                    drivers = result.data.users;
+                    updateDriverSelect();
+                    console.log(`${drivers.length} motoristas carregados`);
+                } else {
+                    console.error('Erro ao carregar motoristas:', result);
+                    showError('Erro ao carregar motoristas');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar motoristas:', error);
+                showError('Erro de conexão ao carregar motoristas');
+            }
+        }
+
+        // Atualizar select de motoristas
+        function updateDriverSelect() {
+            elements.driverId.innerHTML = '<option value="">Selecione um motorista</option>';
+            drivers.forEach(driver => {
+                const option = document.createElement('option');
+                option.value = driver.id;
+                option.textContent = `${driver.name} (${driver.id})`;
+                elements.driverId.appendChild(option);
+            });
+        }
+
+        // Gerar ID de viagem
+        function generateTripId() {
+            const timestamp = Date.now().toString().slice(-6);
+            const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+            elements.tripId.value = `TRIP-${timestamp}-${random}`;
+        }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            elements.enterpriseSelect.addEventListener('change', function() {
+                currentEnterpriseId = this.value;
+                if (currentEnterpriseId) {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const enterpriseName = selectedOption.textContent.split(' (')[0];
+                    elements.enterpriseName.textContent = enterpriseName;
+                    elements.enterpriseStatus.textContent = 'Selecionada';
+                    elements.createRideBtn.disabled = false;
+                    loadRideRequests();
+                    loadNotifications();
+                } else {
+                    elements.enterpriseName.textContent = 'Selecionar Empresa';
+                    elements.enterpriseStatus.textContent = 'Ativa';
+                    elements.createRideBtn.disabled = true;
+                    resetRidesList();
+                    resetCounts();
+                }
+            });
+
+            elements.statusFilter.addEventListener('change', renderRideRequests);
+            elements.createRideBtn.addEventListener('click', openCreateRideModal);
+            elements.refreshBtn.addEventListener('click', refreshData);
+            
+            // Modal events
+            elements.closeCreateModalBtn.addEventListener('click', closeCreateRideModal);
+            elements.cancelCreateBtn.addEventListener('click', closeCreateRideModal);
+            elements.confirmCreateBtn.addEventListener('click', createRide);
+            
+            elements.closeActionModalBtn.addEventListener('click', closeActionModal);
+            elements.cancelActionBtn.addEventListener('click', closeActionModal);
+            elements.confirmActionBtn.addEventListener('click', confirmAction);
+        }
+
+        // Reset lists and counts
+        function resetRidesList() {
+            elements.ridesList.innerHTML = `
+                <div class="text-center py-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-gray-300 mb-4">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                    <p class="text-gray-500">Selecione uma empresa para ver as corridas</p>
+                </div>
+            `;
+        }
+
+        function resetCounts() {
+            elements.pendingCount.textContent = '0';
+            elements.acceptedCount.textContent = '0';
+            elements.activeCount.textContent = '0';
+            elements.completedCount.textContent = '0';
+            elements.rejectedCount.textContent = '0';
+        }
+
+        // Carregar corridas da empresa
+        async function loadRideRequests() {
+            if (!currentEnterpriseId) return;
+            
+            try {
+                console.log(`Carregando corridas para empresa: ${currentEnterpriseId}`);
+                const response = await fetch(`/api/ride-requests?user_id=${currentEnterpriseId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    rideRequests = result.data.ride_requests;
+                    console.log(`${rideRequests.length} corridas carregadas`);
+                    renderRideRequests();
+                    updateStatusCounts();
+                } else {
+                    console.error('Erro ao carregar corridas:', result);
+                    showError('Erro ao carregar corridas');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar corridas:', error);
+                showError('Erro de conexão ao carregar corridas');
+            }
+        }
+
+        // Carregar notificações
+        async function loadNotifications() {
+            if (!currentEnterpriseId) return;
+            
+            try {
+                const response = await fetch(`/api/notifications/${currentEnterpriseId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    notifications = result.data.notifications;
+                    renderNotifications();
+                } else {
+                    console.error('Erro ao carregar notificações:', result);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar notificações:', error);
+            }
+        }
+
+        // Renderizar corridas
+        function renderRideRequests() {
+            const filterStatus = elements.statusFilter.value;
+            const filteredRides = filterStatus ? 
+                rideRequests.filter(ride => ride.status === filterStatus) : 
+                rideRequests;
+
+            if (filteredRides.length === 0) {
+                elements.ridesList.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">Nenhuma corrida encontrada</p></div>';
+                return;
+            }
+
+            elements.ridesList.innerHTML = filteredRides.map(ride => createRideCard(ride)).join('');
+        }
+
+        // Criar card de corrida
+        function createRideCard(ride) {
+            const statusColors = {
+                'Pendente': 'bg-yellow-100 text-yellow-800',
+                'Aceito': 'bg-blue-100 text-blue-800',
+                'EmAndamento': 'bg-emerald-100 text-emerald-800',
+                'Finalizado': 'bg-gray-100 text-gray-800',
+                'Recusado': 'bg-red-100 text-red-800'
+            };
+
+            const driver = drivers.find(d => d.id === ride.driver_id);
+            const driverName = driver ? driver.name : ride.driver_id;
+
+            const canStart = ride.status === 'Aceito';
+            const canCancel = ['Pendente', 'Aceito'].includes(ride.status);
+
+            return `
+                <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">${ride.trip_data.trip_id}</h3>
+                            <p class="text-sm text-gray-600">Motorista: ${driverName}</p>
+                            <p class="text-sm text-gray-600">${ride.trip_data.origin_address || 'Origem'} → ${ride.trip_data.destination_address || 'Destino'}</p>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColors[ride.status]}">${ride.status}</span>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 mb-3">
+                        <p>Criado: ${new Date(ride.created_at).toLocaleString('pt-BR')}</p>
+                        ${ride.accepted_at ? `<p>Aceito: ${new Date(ride.accepted_at).toLocaleString('pt-BR')}</p>` : ''}
+                        ${ride.started_at ? `<p>Iniciado: ${new Date(ride.started_at).toLocaleString('pt-BR')}</p>` : ''}
+                        ${ride.rejected_at ? `<p>Rejeitado: ${new Date(ride.rejected_at).toLocaleString('pt-BR')}</p>` : ''}
+                        ${ride.rejection_reason ? `<p class="text-red-600">Motivo: ${ride.rejection_reason}</p>` : ''}
+                    </div>
+
+                    <div class="flex space-x-2">
+                        ${canStart ? `<button onclick="openActionModal('start', '${ride.id}')" class="bg-emerald-600 text-white px-3 py-2 rounded text-sm hover:bg-emerald-700">Iniciar Corrida</button>` : ''}
+                        <button onclick="viewRideDetails('${ride.id}')" class="bg-gray-600 text-white px-3 py-2 rounded text-sm hover:bg-gray-700">Ver Detalhes</button>
+                        ${canCancel ? `<button onclick="openActionModal('cancel', '${ride.id}')" class="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700">Cancelar</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renderizar notificações
+        function renderNotifications() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            if (unreadCount > 0) {
+                elements.notificationBadge.textContent = unreadCount;
+                elements.notificationBadge.classList.remove('hidden');
+            } else {
+                elements.notificationBadge.classList.add('hidden');
+            }
+
+            if (notifications.length === 0) {
+                elements.notificationsList.innerHTML = '<p class="text-white/50 text-sm">Nenhuma notificação</p>';
+                return;
+            }
+
+            elements.notificationsList.innerHTML = notifications
+                .slice(0, 5)
+                .map(notification => `
+                    <div class="bg-white/5 rounded-lg p-3 ${notification.read ? 'opacity-60' : ''}">
+                        <p class="text-sm font-medium text-white">${notification.title}</p>
+                        <p class="text-xs text-white/70">${notification.message}</p>
+                        <p class="text-xs text-white/50 mt-1">${new Date(notification.created_at).toLocaleString('pt-BR')}</p>
+                    </div>
+                `).join('');
+        }
+
+        // Atualizar contadores de status
+        function updateStatusCounts() {
+            const counts = rideRequests.reduce((acc, ride) => {
+                acc[ride.status] = (acc[ride.status] || 0) + 1;
+                return acc;
+            }, {});
+
+            elements.pendingCount.textContent = counts['Pendente'] || 0;
+            elements.acceptedCount.textContent = counts['Aceito'] || 0;
+            elements.activeCount.textContent = counts['EmAndamento'] || 0;
+            elements.completedCount.textContent = counts['Finalizado'] || 0;
+            elements.rejectedCount.textContent = counts['Recusado'] || 0;
+        }
+
+        // Abrir modal de nova corrida
+        function openCreateRideModal() {
+            if (!currentEnterpriseId) {
+                showError('Selecione uma empresa primeiro');
+                return;
+            }
+            generateTripId();
+            elements.createRideModal.classList.remove('hidden');
+        }
+
+        // Fechar modal de nova corrida
+        function closeCreateRideModal() {
+            elements.createRideModal.classList.add('hidden');
+            elements.createRideForm.reset();
+            generateTripId();
+        }
+
+    async function createRide() {
+    const formData = new FormData(elements.createRideForm);
+    
+    const tripId = formData.get('tripId');
+    const driverId = formData.get('driverId');
+    const originAddress = formData.get('originAddress');
+    const destinationAddress = formData.get('destinationAddress');
+    
+    if (!tripId || !driverId || !originAddress || !destinationAddress) {
+        showError('Preencha todos os campos obrigatórios');
+        return;
+    }
+    
+    if (!currentEnterpriseId) {
+        showError('Selecione uma empresa primeiro');
+        return;
+    }
+    
+    const requestBody = {
+        enterprise_id: currentEnterpriseId,
+        driver_id: driverId,
+        trip_data: {
+            trip_id: tripId,
+            driver: driverId,
+            route: ["-23.550000,-46.633000", "-23.555000,-46.640000", "-23.560000,-46.650000"],
+            origin_address: originAddress,
+            destination_address: destinationAddress,
+            estimated_duration: parseInt(formData.get('estimatedDuration')) || 60
+        }
+    };
+
+    try {
+        elements.confirmCreateBtn.disabled = true;
+        elements.confirmCreateBtn.textContent = 'Criando...';
+        
+        const response = await fetch('/api/ride-requests', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            closeCreateRideModal();
+            await refreshData();
+            showSuccess('Corrida criada com sucesso!');
+        } else {
+            showError(result.detail || result.message || 'Erro ao criar corrida');
+        }
+    } catch (error) {
+        showError('Erro de conexão');
+    } finally {
+        elements.confirmCreateBtn.disabled = false;
+        elements.confirmCreateBtn.textContent = 'Criar Corrida';
+    }
+}
+
+        // Abrir modal de ação
+        function openActionModal(action, rideId) {
+            currentAction = { action, rideId };
+            const ride = rideRequests.find(r => r.id === rideId);
+            
+            if (action === 'start') {
+                elements.actionModalTitle.textContent = 'Iniciar Corrida';
+                elements.actionModalContent.innerHTML = `
+                    <p class="text-gray-700 mb-4">Deseja iniciar a corrida <strong>${ride.trip_data.trip_id}</strong>?</p>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p class="text-sm"><strong>Motorista:</strong> ${drivers.find(d => d.id === ride.driver_id)?.name || ride.driver_id}</p>
+                        <p class="text-sm"><strong>Status atual:</strong> ${ride.status}</p>
+                    </div>
+                    <div class="mt-3 p-3 bg-blue-50 rounded">
+                        <p class="text-sm text-blue-800">Ao iniciar, um contrato será criado na blockchain Stellar.</p>
+                    </div>
+                `;
+                elements.confirmActionBtn.textContent = 'Iniciar Corrida';
+                elements.confirmActionBtn.className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700';
+            } else if (action === 'cancel') {
+                elements.actionModalTitle.textContent = 'Cancelar Corrida';
+                elements.actionModalContent.innerHTML = `
+                    <p class="text-gray-700 mb-4">Deseja cancelar a corrida <strong>${ride.trip_data.trip_id}</strong>?</p>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p class="text-sm"><strong>Status atual:</strong> ${ride.status}</p>
+                    </div>
+                    <div class="mt-3 p-3 bg-red-50 rounded">
+                        <p class="text-sm text-red-800">Esta ação não pode ser desfeita.</p>
+                    </div>
+                `;
+                elements.confirmActionBtn.textContent = 'Cancelar Corrida';
+                elements.confirmActionBtn.className = 'bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700';
+            }
+            
+            elements.actionModal.classList.remove('hidden');
+        }
+
+        // Confirmar ação
+        async function confirmAction() {
+            if (!currentAction) return;
+            
+            try {
+                if (currentAction.action === 'start') {
+                    const response = await fetch(`/api/ride-requests/${currentAction.rideId}/start`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            enterprise_id: currentEnterpriseId
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        closeActionModal();
+                        await refreshData();
+                        showSuccess('Corrida iniciada com sucesso! Contrato criado na blockchain.');
+                    } else {
+                        showError('Erro: ' + (result.detail || 'Erro ao iniciar corrida'));
+                    }
+                } else if (currentAction.action === 'cancel') {
+                    // Implementar cancelamento (não existe endpoint ainda)
+                    showError('Funcionalidade de cancelamento ainda não implementada');
+                    closeActionModal();
+                }
+            } catch (error) {
+                console.error('Erro na ação:', error);
+                showError('Erro ao processar ação');
+            }
+        }
+
+        // Fechar modal de ação
+        function closeActionModal() {
+            elements.actionModal.classList.add('hidden');
+            currentAction = null;
+        }
+
+        // Ver detalhes da corrida
+        function viewRideDetails(rideId) {
+            const ride = rideRequests.find(r => r.id === rideId);
+            const driver = drivers.find(d => d.id === ride.driver_id);
+            
+            let details = `Detalhes da Corrida:\n\n`;
+            details += `ID: ${ride.trip_data.trip_id}\n`;
+            details += `Motorista: ${driver?.name || ride.driver_id}\n`;
+            details += `Status: ${ride.status}\n`;
+            details += `Origem: ${ride.trip_data.origin_address || 'N/A'}\n`;
+            details += `Destino: ${ride.trip_data.destination_address || 'N/A'}\n`;
+            details += `Criado: ${new Date(ride.created_at).toLocaleString('pt-BR')}\n`;
+            
+            if (ride.accepted_at) {
+                details += `Aceito: ${new Date(ride.accepted_at).toLocaleString('pt-BR')}\n`;
+            }
+            if (ride.started_at) {
+                details += `Iniciado: ${new Date(ride.started_at).toLocaleString('pt-BR')}\n`;
+            }
+            if (ride.rejected_at) {
+                details += `Rejeitado: ${new Date(ride.rejected_at).toLocaleString('pt-BR')}\n`;
+                if (ride.rejection_reason) {
+                    details += `Motivo: ${ride.rejection_reason}\n`;
+                }
+            }
+            
+            alert(details);
+        }
+
+        // Atualizar dados
+        async function refreshData() {
+            if (currentEnterpriseId) {
+                await Promise.all([
+                    loadRideRequests(),
+                    loadNotifications(),
+                    loadDrivers()
+                ]);
+                updateDriverSelect();
+            }
+        }
+
+        // Polling para atualizações automáticas
+        function startPolling() {
+            setInterval(async () => {
+                if (currentEnterpriseId) {
+                    await loadNotifications();
+                    const currentCount = rideRequests.length;
+                    await loadRideRequests();
+                    if (rideRequests.length !== currentCount) {
+                        console.log('Dados atualizados');
+                    }
+                }
+            }, 15000); // Atualizar a cada 15 segundos
+        }
+
+        // Funções de utilidade
+        function showError(message) {
+            alert('Erro: ' + message);
+        }
+
+        function showSuccess(message) {
+            alert('Sucesso: ' + message);
+        }
+
+        // Tornar funções globais
+        window.openActionModal = openActionModal;
+        window.viewRideDetails = viewRideDetails;
+    </script>
+</body>
+</html>

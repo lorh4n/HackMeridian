@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTRA | Transport Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        .mode-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+        
+        .driver-card:hover {
+            border-color: #10b981;
+            box-shadow: 0 25px 50px rgba(16, 185, 129, 0.2);
+        }
+        
+        .enterprise-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 25px 50px rgba(245, 158, 11, 0.2);
+        }
+        
+        .icon-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(5px);
+        }
+        
+        .animate-pulse-custom {
+            animation: pulse-custom 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse-custom {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        .bg-sentra-navy { background-color: #05070f; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    
+    <!-- Background decoration -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-600 rounded-full opacity-20 blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-600 rounded-full opacity-20 blur-3xl"></div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-6xl w-full">
+        
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <div class="flex justify-center mb-8">
+                <div class="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center backdrop-filter backdrop-blur-lg border border-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 17h4V5H2v12h8"/>
+                        <path d="M22 17h-4V5h4v12Z"/>
+                        <circle cx="8" cy="10" r="1"/>
+                        <circle cx="18" cy="10" r="1"/>
+                    </svg>
+                </div>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4">
+                SEN<span class="text-orange-400">TRA</span>
+            </h1>
+            <p class="text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
+                Plataforma descentralizada de transporte com contratos inteligentes na blockchain Stellar
+            </p>
+        </div>
+        
+        <!-- Mode Selection -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            
+            <!-- Driver Mode -->
+            <a href="/driver" class="mode-card driver-card group rounded-3xl p-8 md:p-12 text-center cursor-pointer border-2 border-transparent">
+                <div class="icon-container w-24 h-24 mx-auto mb-8 rounded-2xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                        <circle cx="12" cy="12" r="8"/>
+                        <path d="M12 2v7.5"/>
+                        <path d="M12 16.5V22"/>
+                        <path d="M4.93 4.93l5.66 5.66"/>
+                        <path d="M13.41 13.41l5.66 5.66"/>
+                        <path d="M2 12h7.5"/>
+                        <path d="M14.5 12H22"/>
+                        <path d="M4.93 19.07l5.66-5.66"/>
+                        <path d="M13.41 10.59l5.66-5.66"/>
+                    </svg>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors">
+                    Driver Mode
+                </h2>
+                
+                <p class="text-white/70 text-lg mb-6 leading-relaxed">
+                    Receba solicitações de corrida, gerencie entregas e acompanhe seus ganhos
+                </p>
+                
+                <div class="flex justify-center space-x-4">
+                    <span class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-sm font-medium">
+                        Aceitar Corridas
+                    </span>
+                    <span class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-sm font-medium">
+                        Checkpoints
+                    </span>
+                </div>
+                
+                <div class="mt-8 flex items-center justify-center text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                    <span class="mr-2">Acessar Interface</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12,5 19,12 12,19"></polyline>
+                    </svg>
+                </div>
+            </a>
+            
+            <!-- Enterprise Mode -->
+            <a href="/enterprise" class="mode-card enterprise-card group rounded-3xl p-8 md:p-12 text-center cursor-pointer border-2 border-transparent">
+                <div class="icon-container w-24 h-24 mx-auto mb-8 rounded-2xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 group-hover:text-amber-300 transition-colors">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-white mb-4 group-hover:text-amber-300 transition-colors">
+                    Enterprise Mode
+                </h2>
+                
+                <p class="text-white/70 text-lg mb-6 leading-relaxed">
+                    Gerencie sua frota, crie corridas e monitore operações em tempo real
+                </p>
+                
+                <div class="flex justify-center space-x-4">
+                    <span class="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-sm font-medium">
+                        Criar Corridas
+                    </span>
+                    <span class="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-sm font-medium">
+                        Gerenciar Frota
+                    </span>
+                </div>
+                
+                <div class="mt-8 flex items-center justify-center text-amber-400 group-hover:text-amber-300 transition-colors">
+                    <span class="mr-2">Acessar Interface</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12,5 19,12 12,19"></polyline>
+                    </svg>
+                </div>
+            </a>
+            
+        </div>
+        
+        <!-- Features Section -->
+        <div class="mt-20 text-center">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Blockchain Stellar</h3>
+                    <p class="text-white/60 text-sm">Contratos inteligentes seguros e transparentes</p>
+                </div>
+                
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Segurança Total</h3>
+                    <p class="text-white/60 text-sm">Registro imutável de todas as transações</p>
+                </div>
+                
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Tempo Real</h3>
+                    <p class="text-white/60 text-sm">Monitoramento e notificações instantâneas</p>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-16 text-center">
+            <p class="text-white/40 text-sm">
+                Powered by Stellar Network • Version 2.0.0
+            </p>
+        </div>
+        
+    </div>
+    
+    <!-- Loading overlay (hidden by default) -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-2xl p-8 text-center border border-white/20">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p class="text-white text-lg">Carregando interface...</p>
+        </div>
+    </div>
+    
+    <script>
+        // Add loading state when clicking on mode cards
+        document.querySelectorAll('.mode-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('loadingOverlay').classList.remove('hidden');
+                
+                // Simulate loading delay
+                setTimeout(() => {
+                    window.location.href = this.getAttribute('href');
+                }, 800);
+            });
+        });
+        
+        // Add subtle animation to cards on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.mode-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200 + (index * 200));
+            });
+        });
+    </script>
+</body>
+</html>

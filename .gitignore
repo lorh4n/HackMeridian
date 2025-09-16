@@ -1,0 +1,8 @@
+.env
+*/.env
+
+backend2/target
+backend2
+stellar/
+
+backend/env/
