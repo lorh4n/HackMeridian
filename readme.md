@@ -1,226 +1,92 @@
-# SENTRA Transport Platform v2.0
+# SENTRA Transport Platform
 
-Sistema descentralizado de transporte com contratos inteligentes na blockchain Stellar, agora com suporte completo a múltiplos usuários e fluxo Enterprise/Driver.
+[![Deploy](https://img.shields.io/badge/Deploy-Render-blue)](https://hackmeridian-1.onrender.com)
 
-## 🚀 Novas Funcionalidades
+**SENTRA** is a decentralized transport platform that leverages the Stellar blockchain to create a transparent and efficient system for managing ride requests between enterprises and drivers.
 
-### ✨ Sistema Multi-Usuário
-- **Driver Mode**: Interface para motoristas aceitarem/rejeitarem corridas
-- **Enterprise Mode**: Painel para empresas criarem e gerenciarem corridas
-- **Sistema de Notificações**: Comunicação em tempo real entre partes
-- **Gestão de Permissões**: Controle de acesso baseado em roles
+## 🚀 Live Demo
 
-### 🔄 Fluxo Completo de Corridas
-1. **Enterprise** cria solicitação de corrida para **Driver específico**
-2. **Driver** recebe notificação e pode **aceitar** ou **rejeitar**
-3. Se aceito, **Enterprise** pode **iniciar a corrida** (cria contrato Stellar)
-4. Sistema monitora progresso via checkpoints na blockchain
+You can access the live application here: [https://hackmeridian-1.onrender.com](https://hackmeridian-1.onrender.com)
 
-## 📋 Pré-requisitos
+## 📖 About the Project
+
+This project was developed for the HackMeridian hackathon. It aims to solve the problem of opacity and centralization in the transport logistics industry. By using smart contracts on the Stellar network, SENTRA ensures that all parties have a single source of truth for ride events, from creation to completion.
+
+The platform provides separate interfaces for two main roles:
+- **Enterprise**: Can create and manage ride requests.
+- **Driver**: Can view and accept pending ride requests.
+
+## ✨ Features
+
+- **Decentralized Workflow**: Smart contracts on the Stellar blockchain manage the state of each ride.
+- **Real-time Notifications**: A notification system keeps users informed of ride status changes.
+- **Role-based Interfaces**: Separate and intuitive UIs for enterprises and drivers.
+- **Complete Ride Lifecycle**: Full management of the ride process, from request to completion.
+
+## 🛠️ Technologies Used
+
+- **Backend**: Python, FastAPI
+- **Frontend**: HTML, CSS, JavaScript, Jinja2
+- **Blockchain**: Stellar SDK, Soroban (with Rust)
+- **Deployment**: Render
+
+## 🧠 Smart Contract
+
+The core of the platform's decentralized logic lies in a smart contract developed with Rust using the Soroban SDK for the Stellar network.
+
+This contract is responsible for managing the lifecycle of a trip through various checkpoints. Each trip has a defined status, which can be one of the following:
+
+- `Pendente`: The trip has been created but has not yet started.
+- `EmAndamento`: The trip has started.
+- `PontoIntermediario`: The trip has reached an intermediate checkpoint.
+- `Finalizada`: The trip has been completed.
+
+The main functions of the contract are:
+
+- `criar_viagem`: Creates a new trip with defined checkpoints (start, middle, and end).
+- `marcar_saida`: Marks the trip as started.
+- `marcar_meio`: Marks the trip as having reached the intermediate point.
+- `marcar_chegada`: Marks the trip as finished.
+
+Each of these functions requires authorization from the corresponding checkpoint address, ensuring that only authorized entities can update the trip status. This creates an immutable and verifiable history of each trip on the blockchain.
+
+## 🏁 Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
 
 - Python 3.8+
-- FastAPI
-- Stellar SDK Python
-- Jinja2 para templates
-- Variáveis de ambiente configuradas (.env)
+- An account on the Stellar test network.
 
-## 🛠️ Instalação
+### Installation
 
-```bash
-# Clonar repositório
-git clone <repo-url>
-cd sentra-transport
+1. Clone the repo
+   ```sh
+   git clone https://github.com/your_username/HackMeridian.git
+   ```
+2. Navigate to the backend directory
+   ```sh
+   cd HackMeridian/backend
+   ```
+3. Install Python packages
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. Create a `.env` file from the example
+    ```sh
+    cp .env.example .env
+    ```
+5. Add your Stellar secret key to the `.env` file.
 
-# Instalar dependências
-pip install fastapi uvicorn stellar-sdk python-dotenv jinja2
+### Running the Application
 
-# Criar pastas necessárias
-mkdir -p templates static/css static/js
+1. Run the FastAPI server
+   ```sh
+   uvicorn main:app --reload
+   ```
+2. Open your browser and navigate to `http://127.0.0.1:8000`.
 
-# Configurar variáveis de ambiente
-cp .env.example .env
-# Editar .env com suas configurações Stellar
-```
+## 📄 License
 
-## ⚙️ Configuração
-
-### Arquivo .env
-```bash
-# Stellar Network
-STELLAR_NETWORK=testnet
-STELLAR_SECRET_KEY=your_secret_key
-STELLAR_PUBLIC_KEY=your_public_key
-STELLAR_CONTRACT_ID=your_contract_id
-
-# API
-PORT=3000
-ENVIRONMENT=development
-```
-
-### Estrutura de Pastas
-```
-sentra-transport/
-├── main.py                 # API principal
-├── models.py              # Modelos de dados
-├── user_service.py        # Serviço de usuários
-├── stellar_service.py     # Serviço Stellar
-├── templates/
-│   ├── index.html         # Tela inicial
-│   ├── driver.html        # Interface motorista
-│   └── enterprise.html    # Interface empresa
-├── static/
-│   ├── css/
-│   └── js/
-└── README.md
-```
-
-## 🚀 Executar
-
-```bash
-# Desenvolvimento
-python main.py
-
-# Ou usando uvicorn diretamente
-uvicorn main:app --host 0.0.0.0 --port 3000 --reload
-
-# Acessar: http://localhost:3000
-```
-
-## 📱 Interfaces
-
-### 🏠 Tela Inicial (`/`)
-- Seleção entre **Driver Mode** e **Enterprise Mode**
-- Design moderno com glassmorphism
-- Animações e feedback visual
-
-### 🚗 Driver Mode (`/driver`)
-- Seleção de motorista (usuários demo inclusos)
-- Lista de corridas pendentes/aceitas/em andamento
-- Sistema de notificações em tempo real
-- Ações: Aceitar, Rejeitar corridas
-- Polling automático para atualizações
-
-### 🏢 Enterprise Mode (`/enterprise`)
-- Seleção de empresa
-- Criação de novas corridas com formulário completo
-- Seleção de motorista alvo
-- Gestão de corridas: Iniciar, Monitorar, Cancelar
-- Dashboard com métricas e status
-
-## 🔗 API Endpoints
-
-### Usuários
-- `GET /api/users` - Lista usuários (filtro por role)
-- `GET /api/users/{user_id}` - Detalhes do usuário
-- `POST /api/users` - Criar usuário
-
-### Solicitações de Corrida
-- `GET /api/ride-requests?user_id=X` - Lista corridas do usuário
-- `POST /api/ride-requests` - Criar nova corrida
-- `GET /api/ride-requests/{id}` - Detalhes da corrida
-- `POST /api/ride-requests/{id}/accept` - Driver aceita
-- `POST /api/ride-requests/{id}/reject` - Driver rejeita
-- `POST /api/ride-requests/{id}/start` - Enterprise inicia
-
-### Notificações
-- `GET /api/notifications/{user_id}` - Lista notificações
-- `POST /api/notifications/{user_id}/{notif_id}/read` - Marcar como lida
-
-### Contratos (Compatibilidade v1)
-- `POST /contract/create` - Criar contrato Stellar
-- `GET /contract/{trip_id}` - Status do contrato
-- `POST /contract/manage` - Atualizar status
-
-## 👥 Usuários Demo
-
-O sistema inclui usuários de demonstração:
-
-**Motoristas:**
-- João Silva (DRV-001)
-- Maria Santos (DRV-002)
-
-**Empresas:**
-- TransLog Empresa (EMP-001)
-
-**Admin:**
-- Sistema Admin (ADM-001)
-
-## 🔄 Estados da Corrida
-
-```
-Pendente → [Driver aceita] → Aceito → [Enterprise inicia] → EmAndamento → Finalizado
-         → [Driver recusa] → Recusado
-         → [Timeout/Cancel] → Cancelado
-```
-
-## 🔔 Sistema de Notificações
-
-- **Enterprise**: Recebe notificações quando driver aceita/rejeita
-- **Driver**: Recebe notificações de novas corridas disponíveis
-- **Polling**: Atualizações automáticas a cada 10-15 segundos
-- **Badges**: Contadores visuais de notificações não lidas
-
-## 🔒 Controle de Permissões
-
-- **Driver**: Pode aceitar/rejeitar apenas suas próprias corridas
-- **Enterprise**: Pode criar corridas e gerenciar suas próprias solicitações
-- **Admin**: Acesso total (futuro)
-
-## 🌐 Blockchain Stellar
-
-- Contratos criados quando corrida é **iniciada** (não na solicitação)
-- Smart contract Soroban para checkpoints
-- Transações registradas na rede testnet/mainnet
-- Histórico imutável de eventos
-
-## 🛣️ Roadmap
-
-### Próximas Funcionalidades
-- [ ] WebSockets para notificações real-time
-- [ ] Autenticação JWT
-- [ ] Persistência em banco de dados
-- [ ] Sistema de pagamentos
-- [ ] Tracking GPS em tempo real
-- [ ] Dashboard de analytics
-- [ ] API para apps móveis
-
-### Melhorias Técnicas
-- [ ] Testes unitários/integração
-- [ ] Docker containerização
-- [ ] CI/CD pipeline
-- [ ] Monitoramento e logs
-- [ ] Rate limiting
-- [ ] Caching Redis
-
-## 🚨 Limitações Atuais
-
-- **Dados em memória**: Reiniciar servidor apaga dados
-- **Polling**: Não é real-time (WebSockets futuros)
-- **Sem autenticação**: Sistema baseado em seleção de usuário
-- **Stellar simulado**: Funciona sem contrato real deployed
-
-## 🆘 Troubleshooting
-
-### Problema: Motoristas não aparecem
-- Verifique se `/api/users?role=driver` retorna dados
-- Confirme inicialização do `user_service`
-
-### Problema: Notificações não atualizam
-- Verifique polling no console do navegador
-- Confirme seleção de usuário ativo
-
-### Problema: Erro ao criar corrida
-- Verifique se empresa e motorista estão selecionados
-- Confirme campos obrigatórios preenchidos
-
-## 📞 Suporte
-
-Para problemas ou dúvidas:
-1. Verificar logs do servidor
-2. Inspecionar Network tab do navegador
-3. Confirmar configuração .env
-4. Testar endpoints via `/docs` (Swagger)
-
----
-
-**SENTRA Transport Platform v2.0** - Powered by Stellar Network
+Distributed under the MIT License. See `LICENSE` for more information.
