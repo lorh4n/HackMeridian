@@ -1,0 +1,7 @@
+[console_scripts]
+stellar-contract-bindings = stellar_contract_bindings.cli:cli
+stellar-contract-bindings-flutter = stellar_contract_bindings.cli:cli_flutter
+stellar-contract-bindings-java = stellar_contract_bindings.cli:cli_java
+stellar-contract-bindings-php = stellar_contract_bindings.cli:cli_php
+stellar-contract-bindings-python = stellar_contract_bindings.cli:cli_python
+stellar-contract-bindings-swift = stellar_contract_bindings.cli:cli_swift
