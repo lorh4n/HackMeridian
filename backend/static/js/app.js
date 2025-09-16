@@ -1,5 +1,5 @@
 // Configuração da API - ajuste para seu ambiente
-const API_URL = "http://localhost:3000"; // ou sua URL do Render/Railway
+const API_URL = "https://hackmeridian-1.onrender.com"; // ou sua URL do Render/Railway
 
 // Estado global para sincronizar com o trip viewer
 let currentTripData = null;
